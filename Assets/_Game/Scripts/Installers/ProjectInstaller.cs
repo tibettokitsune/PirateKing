@@ -1,7 +1,7 @@
 using Game.Configs;
 using Zenject;
 
-namespace _Game.Scripts.Installers
+namespace Game.Installers
 {
     public class ProjectInstaller : MonoInstaller
     {

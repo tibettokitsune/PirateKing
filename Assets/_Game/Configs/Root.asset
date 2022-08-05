@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c272ce05d2400da63b1ebda4a06cac, type: 3}
   m_Name: Root
   m_EditorClassIdentifier: 
-  sceneConfig: {fileID: 0}
+  sceneConfig: {fileID: 11400000, guid: 8fdc303ae53194136a8f302010ede008, type: 2}
