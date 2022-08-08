@@ -15,16 +15,21 @@ namespace Game.UI
 
         public virtual void CloseScreen()
         {
+            OnScreenCloseStart.Execute();
             canvasGroup.alpha = 0f;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
+            OnScreenCloseEnd.Execute();
         }
 
         public virtual void OpenScreen()
         {
+            OnScreenOpenStart.Execute();
             canvasGroup.alpha = 1f;
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
+
+            OnScreenOpenEnd.Execute();
         }
     }
 }

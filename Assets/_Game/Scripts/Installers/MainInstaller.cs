@@ -1,3 +1,5 @@
+using _Game.Scripts.Infrastructure;
+using Game.Infrastructure;
 using Game.UI;
 using Zenject;
 
@@ -7,6 +9,8 @@ namespace Game.Installers
     {
         public override void InstallBindings()
         {
+            Container.BindInstance(new GameEvents()).AsSingle();
+            Container.BindInterfacesTo<SceneController>().AsSingle();
             BindUI();
         }
 
