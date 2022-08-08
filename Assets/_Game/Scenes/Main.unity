@@ -287,6 +287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 268339865}
+  trainingButton: {fileID: 4545258535278413252}
 --- !u!225 &268339865
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -315,7 +316,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!223 &268339867
 Canvas:
   m_ObjectHideFlags: 0
@@ -396,7 +397,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 55
 --- !u!223 &284442831
 Canvas:
   m_ObjectHideFlags: 0
@@ -443,6 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 284442832}
+  bar: {fileID: 4588560123978146859}
 --- !u!1 &317621754
 GameObject:
   m_ObjectHideFlags: 0
