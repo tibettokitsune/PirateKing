@@ -9,10 +9,10 @@ namespace Game.UI
     {
         [SerializeField] private Slider bar;
         private Coroutine _loadingBarCoroutine;
-        public void Loading(AsyncOperation loading, Action onComplete)
+        public void Loading(AsyncOperation loading)
         {
             StopIfWork();
-            _loadingBarCoroutine = StartCoroutine(LoadingBarWork(loading, onComplete));
+            _loadingBarCoroutine = StartCoroutine(LoadingBarWork(loading));
         }
 
         private void StopIfWork()
@@ -21,18 +21,13 @@ namespace Game.UI
                 StopCoroutine(_loadingBarCoroutine);
         }
 
-        private IEnumerator LoadingBarWork(AsyncOperation loading, Action onComplete)
+        private IEnumerator LoadingBarWork(AsyncOperation loading)
         {
-            OpenScreen();
-
             while (!loading.isDone)
             {
                 bar.value = loading.progress;
                 yield return null;
             }
-            
-            CloseScreen();
-            onComplete.Invoke();
         }
     }
 }

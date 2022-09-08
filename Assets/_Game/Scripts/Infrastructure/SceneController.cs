@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
+using _Game.Scripts.Infrastructure;
 using Game.Configs;
 using Game.Infrastructure;
 using Game.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
+using Random = UnityEngine.Random;
 
 
 namespace Game.Infrastructure
@@ -13,37 +16,47 @@ namespace Game.Infrastructure
     {
         [Inject] private SceneConfig _sceneConfig;
         [Inject] private LoadingScreen _loadingScreen;
-        private List<string> _currentScene = new List<string>();
-        
+        [Inject] private GameEvents _gameEvents;
+        private List<string> _loadedScenes = new List<string>();
+        private AsyncOperation _loadingOperation;
         public void OpenTutorialScene()
         {
-            if (_currentScene.Count > 0)
+            UnloadScenes();
+            _loadingScreen.OpenScreen();
+            LoadScene(RandomEnvironmentScene(), () =>
             {
-                foreach (var s in _currentScene)
+                LoadScene(_sceneConfig.singlePlayerScene, () =>
+                {
+                    _loadingScreen.CloseScreen();
+                    _gameEvents.OnTutorialSceneLoaded.Execute();
+                });
+            });
+        }
+
+        private void UnloadScenes()
+        {
+            if (_loadedScenes.Count > 0)
+            {
+                foreach (var s in _loadedScenes)
                 {
                     SceneManager.UnloadSceneAsync(s);
                 }
             }
-
-            var envSceneName = RandomEnvironmentScene();
-            var l = SceneManager.LoadSceneAsync(envSceneName);
-            _loadingScreen.Loading(l, () =>
-            {
-                _currentScene.Add(envSceneName);
-                var g = SceneManager.LoadSceneAsync(_sceneConfig.singlePlayerScene);
-                _loadingScreen.Loading(g, () =>
-                {
-                    _currentScene.Add(_sceneConfig.singlePlayerScene);
-                });
-            });
         }
 
         private string RandomEnvironmentScene() =>
             _sceneConfig.environmentScenes[Random.Range(0, _sceneConfig.environmentScenes.Length)];
 
-        private void LoadScene()
+        private void LoadScene(string sceneName, Action onSceneComplete)
         {
-            
+            var l = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            l.completed += o =>
+            {
+                onSceneComplete?.Invoke();
+                _loadedScenes.Add(sceneName);
+            };
+            _loadingScreen.Loading(l);
+
         }
     }
 }
