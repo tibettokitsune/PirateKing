@@ -11,6 +11,7 @@ namespace Game.Installers
         {
             Container.BindInstance(new GameEvents()).AsSingle();
             Container.BindInterfacesTo<SceneController>().AsSingle();
+            Container.Bind<UnityEngine.Camera>().FromComponentInHierarchy().AsSingle();
             BindUI();
         }
 
