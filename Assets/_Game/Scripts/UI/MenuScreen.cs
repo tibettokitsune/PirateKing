@@ -1,4 +1,3 @@
-using _Game.Scripts.Infrastructure;
 using Game.Infrastructure;
 using Sirenix.OdinInspector;
 using UniRx;

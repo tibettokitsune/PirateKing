@@ -1,6 +1,6 @@
 using UniRx;
 
-namespace _Game.Scripts.Infrastructure
+namespace Game.Infrastructure
 {
     public class GameEvents
     {

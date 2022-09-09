@@ -6,5 +6,6 @@ namespace Game.Configs
     public class RootConfig : ScriptableObject
     {
         public SceneConfig sceneConfig;
+        public UnitsConfig unitsConfig;
     }
 }

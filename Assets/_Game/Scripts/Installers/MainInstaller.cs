@@ -1,4 +1,3 @@
-using _Game.Scripts.Infrastructure;
 using Game.Infrastructure;
 using Game.UI;
 using Zenject;

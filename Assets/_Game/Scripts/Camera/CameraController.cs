@@ -2,8 +2,11 @@ using Zenject;
 
 namespace Game.Camera
 {
-    
-    public class CameraController
+    public interface ICameraController
+    {
+        
+    }
+    public class CameraController : ICameraController
     { 
         [Inject] private UnityEngine.Camera _camera;
         

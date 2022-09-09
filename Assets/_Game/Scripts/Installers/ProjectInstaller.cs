@@ -14,6 +14,7 @@ namespace Game.Installers
         private void BindConfigs()
         {
             Container.BindInstance(rootConfig.sceneConfig);
+            Container.BindInstance(rootConfig.unitsConfig);
         }
     }
 }

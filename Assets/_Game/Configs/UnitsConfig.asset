@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c272ce05d2400da63b1ebda4a06cac, type: 3}
-  m_Name: Root
+  m_Script: {fileID: 11500000, guid: bc3d30a1fe184072aeab07ad8ce1de53, type: 3}
+  m_Name: UnitsConfig
   m_EditorClassIdentifier: 
-  sceneConfig: {fileID: 11400000, guid: 8fdc303ae53194136a8f302010ede008, type: 2}
-  unitsConfig: {fileID: 11400000, guid: 06abb8905e7e64431a13ed2c90f26740, type: 2}
+  controllerPrefab: {fileID: 856538567897329427, guid: e1bcbdebfdd16457baffc2c98fdda601,
+    type: 3}

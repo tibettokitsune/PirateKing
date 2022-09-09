@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using _Game.Scripts.Infrastructure;
 using Game.Configs;
 using Game.Infrastructure;
 using Game.UI;
@@ -17,14 +16,16 @@ namespace Game.Infrastructure
         [Inject] private SceneConfig _sceneConfig;
         [Inject] private LoadingScreen _loadingScreen;
         [Inject] private GameEvents _gameEvents;
-        private List<string> _loadedScenes = new List<string>();
+        private readonly List<string> _loadedScenes = new List<string>();
         private AsyncOperation _loadingOperation;
         public void OpenTutorialScene()
         {
             UnloadScenes();
             _loadingScreen.OpenScreen();
-            LoadScene(RandomEnvironmentScene(), () =>
+            var envSceneName = RandomEnvironmentScene();
+            LoadScene(envSceneName, () =>
             {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(envSceneName));
                 LoadScene(_sceneConfig.singlePlayerScene, () =>
                 {
                     _loadingScreen.CloseScreen();

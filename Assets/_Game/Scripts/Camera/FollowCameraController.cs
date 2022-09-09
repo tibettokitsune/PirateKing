@@ -22,7 +22,8 @@ namespace Game.Camera
 
         private void LateUpdate()
         {
-            _transposer.m_FollowOffset = FocusDirection() * radius + Vector3.up * verticalOffset;
+            if(_camera.Follow)
+                _transposer.m_FollowOffset = FocusDirection() * radius + Vector3.up * verticalOffset;
         }
 
         private Vector3 FocusDirection()

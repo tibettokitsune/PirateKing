@@ -1,4 +1,7 @@
+using Game.Infrastructure;
 using Game.Camera;
+using Game.Units;
+using UnityEngine;
 using Zenject;
 
 namespace Game.Installers
@@ -7,8 +10,11 @@ namespace Game.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<CameraController>().FromComponentInHierarchy().AsSingle();
+            Container.BindInterfacesTo<UnitControllerSpawner>().AsSingle();
+            Container.BindInterfacesTo<CameraController>().AsSingle();
+            Container.BindFactory<UnitData, CharacterController, UnitController, UnitController.Factory>();
             
+            Container.BindInterfacesTo<SinglePlayerLevelController>().AsSingle();
         }
     }
 }
