@@ -7,8 +7,11 @@ namespace Game.Infrastructure
 {
     public class SinglePlayerLevelController : ILevelController
     {
-        // [Inject] private CameraController _cameraController;
+        [Inject] private CameraController _cameraController;
         [Inject] private IUnitControllerSpawner _unitControllerSpawner;
+
+        private UnitController _player;
+        private UnitController _enemy;
         public void Initialize()
         {
             SpawnUnits();
@@ -19,17 +22,20 @@ namespace Game.Infrastructure
             SpawnPlayer();
             
             SpawnEnemy();
+            
+            _cameraController.SetupPlayerCamera(_player.GetTransformTarget(), _enemy.GetTransformTarget());
         }
 
         private void SpawnEnemy()
         {
-            Debug.Log("Spawn enemy");
+            var unitData = new UnitData();
+            _enemy = _unitControllerSpawner.SpawnUnit(unitData);
         }
 
         private void SpawnPlayer()
         {
             var unitData = new UnitData();
-            var unit = _unitControllerSpawner.SpawnUnit(unitData);
+            _player = _unitControllerSpawner.SpawnUnit(unitData);
         }
     }
 

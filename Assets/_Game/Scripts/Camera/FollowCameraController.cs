@@ -8,7 +8,6 @@ namespace Game.Camera
     public class FollowCameraController : MonoBehaviour
     {
         [SerializeField] private CinemachineVirtualCamera _camera;
-
         [SerializeField] private float radius;
         [SerializeField] private float verticalOffset;
         private CinemachineTransposer _transposer;
@@ -31,6 +30,12 @@ namespace Game.Camera
             var res = _camera.m_Follow.position - _camera.m_LookAt.position;
             res.y = 0;
             return res.normalized;
+        }
+
+        public void SetupFollowAndLookTarget(Transform follow, Transform lookAt)
+        {
+            _camera.Follow = follow;
+            _camera.LookAt = lookAt;
         }
     }
 }

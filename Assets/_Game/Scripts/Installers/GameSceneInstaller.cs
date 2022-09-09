@@ -11,7 +11,7 @@ namespace Game.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesTo<UnitControllerSpawner>().AsSingle();
-            Container.BindInterfacesTo<CameraController>().AsSingle();
+            Container.Bind<CameraController>().FromComponentInHierarchy().AsSingle();
             Container.BindFactory<UnitData, CharacterController, UnitController, UnitController.Factory>();
             
             Container.BindInterfacesTo<SinglePlayerLevelController>().AsSingle();

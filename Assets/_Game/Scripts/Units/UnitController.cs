@@ -19,6 +19,8 @@ namespace Game.Units
             _characterController.transform.position = pos;
             _characterController.enabled = true;
         }
+
+        public Transform GetTransformTarget() => _characterController.transform;
         
         
         public class Factory : PlaceholderFactory<UnitData, CharacterController,UnitController>
