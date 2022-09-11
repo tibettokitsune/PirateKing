@@ -27,6 +27,7 @@ namespace Game.Units
             var currentSpawnPoint = _spawnPoints[Random.Range( 0, _spawnPoints.Count - 1)];
             _spawnPoints.Remove(currentSpawnPoint);
             unit.ChangeStartPosition(currentSpawnPoint.transform.position);
+            unit.CreateView(_config.unitViews[(int) UnitViewVariant.TestDummy]);
             return unit;
         }
 

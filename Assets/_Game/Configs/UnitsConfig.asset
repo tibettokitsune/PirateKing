@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controllerPrefab: {fileID: 856538567897329427, guid: e1bcbdebfdd16457baffc2c98fdda601,
     type: 3}
+  unitViews:
+  - {fileID: 82739101666836488, guid: 898a61acc8e874fd0b53f03f6af9492e, type: 3}

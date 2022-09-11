@@ -1,3 +1,5 @@
+using System;
+using Game.Units;
 using UnityEngine;
 
 namespace Game.Configs
@@ -6,5 +8,8 @@ namespace Game.Configs
     public class UnitsConfig : ScriptableObject
     {
         public CharacterController controllerPrefab;
+
+        public UnitView[] unitViews;
+
     }
 }
