@@ -7,8 +7,8 @@ namespace Game.Units
 
         public UnitData()
         {
-            MovementSpeed = 10f;
-            JumpSpeed = 5f;
+            MovementSpeed = 0.1f;
+            JumpSpeed = 1f;
         }
     }
 }
