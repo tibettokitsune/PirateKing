@@ -222,8 +222,7 @@ MonoBehaviour:
   m_LayerIndex: 0
   m_ShowDebugText: 0
   m_EnableAllChildCameras: 0
-  m_ChildCameras:
-  - {fileID: 1777436248}
+  m_ChildCameras: []
   m_Instructions:
   - m_FullHash: 1823207173
     m_VirtualCamera: {fileID: 1777436248}
@@ -653,8 +652,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 1777436248}
-  radius: 5
-  verticalOffset: 2.5
+  radius: 2.71
+  verticalOffset: 2.78
 --- !u!1 &1914865734
 GameObject:
   m_ObjectHideFlags: 3
