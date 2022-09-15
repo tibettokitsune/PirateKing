@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Game.Units.UnitStates
 {
-    
-    public class MovementState : State
+    public class BoostMovementState : State
     {
+        private const float SpeedMultiplier = 2f;
         private Vector2 _movementVector;
         private UnitController _currentUnitController;
         private UnitController _targetUnitController;
@@ -14,7 +14,8 @@ namespace Game.Units.UnitStates
         private readonly CharacterController _characterController;
         private readonly UnitData _unitData;
 
-        public MovementState(CharacterController characterController, UnitData unitData)
+        private float _defaultSpeed;
+        public BoostMovementState(CharacterController characterController, UnitData unitData)
         {
             _characterController = characterController;
             _unitData = unitData;
@@ -35,7 +36,8 @@ namespace Game.Units.UnitStates
         
         protected override void OnEnable()
         {
-            
+            _defaultSpeed = _unitData.MovementSpeed;
+            _unitData.MovementSpeed = _defaultSpeed * SpeedMultiplier;
         }
 
         protected override bool OnUpdate()
@@ -51,13 +53,13 @@ namespace Game.Units.UnitStates
             
             var rootRotation = Quaternion.LookRotation(forwardVector);
             _unitView.UpdateRotationData(rootRotation);
-            _unitView.SimpleMovement(_movementVector);
+            _unitView.BoosMovement(_movementVector);
             return true;
         }
 
         protected override void OnDisable()
         {
-            
+            _unitData.MovementSpeed = _defaultSpeed;
         }
     }
 }

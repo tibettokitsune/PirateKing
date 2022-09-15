@@ -39,27 +39,55 @@ namespace Game.Units
         {
             _movementFsm = new FSM();
 
-            var movementState = new MovementState(_characterController, _unitData);
-            OnTargetUpdate.Subscribe(_ =>
-            {
-                movementState.UpdateTargets(this, _fightTarget);
-            }).AddTo(Disposable);
-            OnViewUpdate.Subscribe(_ =>
-            {
-                movementState.UpdateView(_unitView);
-            }).AddTo(Disposable);
-            _movementFsm.StatesCollection.Add(movementState);
-
-            _movementFsm.StatesCollection.SetStartState(movementState);
-
-            _movementFsm.StatesCollection.Transitions.From(movementState).To(movementState).Set(() => false);
+            #region AddingMovementState
+                var movementState = new MovementState(_characterController, _unitData);
                 
+                OnTargetUpdate.Subscribe(_ =>
+                {
+                    movementState.UpdateTargets(this, _fightTarget);
+                }).AddTo(Disposable);
+                OnViewUpdate.Subscribe(_ =>
+                {
+                    movementState.UpdateView(_unitView);
+                }).AddTo(Disposable);
+                _movementFsm.StatesCollection.Add(movementState);
+
+                _movementFsm.StatesCollection.SetStartState(movementState);
+
+                // _movementFsm.StatesCollection.Transitions.From(movementState).To(movementState).Set(() => false);
                 OnFixedUpdate.Subscribe(_ =>
+                {
+                    movementState.UpdateMovementData(_movementVector);
+                    
+                }).AddTo(Disposable);
+            #endregion
+            
+            #region AddingBoosMovementState
+                var boostMovementState = new BoostMovementState(_characterController, _unitData);
+                
+                OnTargetUpdate.Subscribe(_ =>
+                {
+                    boostMovementState.UpdateTargets(this, _fightTarget);
+                }).AddTo(Disposable);
+                OnViewUpdate.Subscribe(_ =>
+                {
+                    boostMovementState.UpdateView(_unitView);
+                }).AddTo(Disposable);
+                _movementFsm.StatesCollection.Add(boostMovementState);
+                OnFixedUpdate.Subscribe(_ =>
+                {
+                    boostMovementState.UpdateMovementData(_movementVector);
+                }).AddTo(Disposable);
+            #endregion
+        
+            
+            _movementFsm.StatesCollection.Transitions.From(movementState).To(boostMovementState).Set(() => _moveBoost);
+            _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(movementState).Set(() => !_moveBoost);
+            
+            OnFixedUpdate.Subscribe(_ =>
             {
-                movementState.UpdateMovementData(_movementVector);
                 _movementFsm.Update();
             }).AddTo(Disposable);
-            
             _movementFsm.Initialize();
         }
 

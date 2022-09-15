@@ -40,5 +40,14 @@ namespace Game.Units
             _animator.SetBool(IsCrouch, false);
             _animator.SetBool(IsEvade, false);
         }
+        
+        public void BoosMovement(Vector3 movement)
+        {
+            _animator.SetFloat(Vertical, movement.y);
+            _animator.SetFloat(Horizontal, movement.x);
+            _animator.SetBool(MovementBoost, true);
+            _animator.SetBool(IsCrouch, false);
+            _animator.SetBool(IsEvade, false);
+        }
     }
 }
