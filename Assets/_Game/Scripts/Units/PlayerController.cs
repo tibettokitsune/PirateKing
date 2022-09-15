@@ -20,7 +20,9 @@ namespace Game.Units
 
         public void Update()
         {
-            _unitController.Movement(_input.Horizontal(), _input.Vertical(), _input.IsJump(), _input.IsEvade());
+            var movementVector = new Vector2(_input.Horizontal(), _input.Vertical());
+            _unitController.UpdateMovementData(movementVector, 
+                _input.IsJump(), _input.IsEvade(), _input.IsMovementBoost(), _input.IsCrouch());
         }
 
         public void Dispose()
