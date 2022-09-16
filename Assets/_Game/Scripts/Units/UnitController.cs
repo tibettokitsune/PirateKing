@@ -176,7 +176,7 @@ namespace Game.Units
             layerMask = ~layerMask;
             RaycastHit hit;
             if (Physics.Raycast(_characterController.transform.position,
-                    Vector3.down, out hit, _characterController.height / 2f + 0.01f,
+                    Vector3.down, out hit, 0.01f,
                     layerMask))
                 return true;
             return false;

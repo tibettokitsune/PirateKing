@@ -53,7 +53,7 @@ namespace Game.Units.UnitStates
             _characterController.Move(_jumpVelocity * Time.deltaTime);
             _characterController.Move(rightVector.normalized * _movementVector.x * _unitData.MovementSpeed);
             forwardVector.y = 0;
-            _jumpVelocity.y += Time.deltaTime * Physics.gravity.y;
+            _jumpVelocity.y += Time.deltaTime * Physics.gravity.y * 3f;
             var rootRotation = Quaternion.LookRotation(forwardVector);
             _unitView.UpdateRotationData(rootRotation);
             _unitView.JumpMovement(_movementVector);
