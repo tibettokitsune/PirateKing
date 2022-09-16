@@ -16,7 +16,8 @@ namespace Game.Units
         private static readonly int MovementBoost = Animator.StringToHash("IsMovementBoost");
         private static readonly int IsCrouch = Animator.StringToHash("IsCrouch");
         private static readonly int IsEvade = Animator.StringToHash("IsEvade");
-        
+        private static readonly int IsLanded = Animator.StringToHash("IsLanded");
+
         public void UpdateRotationData(Quaternion rootRotation)
         {
             transform.rotation = rootRotation;
@@ -39,6 +40,17 @@ namespace Game.Units
             _animator.SetBool(MovementBoost, false);
             _animator.SetBool(IsCrouch, false);
             _animator.SetBool(IsEvade, false);
+            _animator.SetBool(IsLanded, true);
+        }
+        
+        public void JumpMovement(Vector3 movement)
+        {
+            _animator.SetFloat(Vertical, movement.y);
+            _animator.SetFloat(Horizontal, movement.x);
+            _animator.SetBool(MovementBoost, false);
+            _animator.SetBool(IsCrouch, false);
+            _animator.SetBool(IsEvade, false);
+            _animator.SetBool(IsLanded, false);
         }
         
         public void Crouching(Vector3 movement)
@@ -48,6 +60,7 @@ namespace Game.Units
             _animator.SetBool(MovementBoost, false);
             _animator.SetBool(IsCrouch, true);
             _animator.SetBool(IsEvade, false);
+            _animator.SetBool(IsLanded, true);
         }
         
         public void BoosMovement(Vector3 movement)
@@ -57,6 +70,7 @@ namespace Game.Units
             _animator.SetBool(MovementBoost, true);
             _animator.SetBool(IsCrouch, false);
             _animator.SetBool(IsEvade, false);
+            _animator.SetBool(IsLanded, true);
         }
     }
 }

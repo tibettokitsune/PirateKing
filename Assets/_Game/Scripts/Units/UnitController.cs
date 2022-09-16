@@ -98,10 +98,35 @@ namespace Game.Units
             }).AddTo(Disposable);
             #endregion
             
+            #region AddingJumpState
+            var jumpState = new JumpState(_characterController, _unitData);
+                
+            OnTargetUpdate.Subscribe(_ =>
+            {
+                jumpState.UpdateTargets(this, _fightTarget);
+            }).AddTo(Disposable);
+            OnViewUpdate.Subscribe(_ =>
+            {
+                jumpState.UpdateView(_unitView);
+            }).AddTo(Disposable);
+            _movementFsm.StatesCollection.Add(jumpState);
+            OnFixedUpdate.Subscribe(_ =>
+            {
+                jumpState.UpdateMovementData(_movementVector);
+            }).AddTo(Disposable);
+            #endregion
+            
             _movementFsm.StatesCollection.Transitions.From(movementState).To(boostMovementState).Set(() => _moveBoost);
             _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(movementState).Set(() => !_moveBoost);
             _movementFsm.StatesCollection.Transitions.From(movementState).To(crouchState).Set(() => _crouch);
             _movementFsm.StatesCollection.Transitions.From(crouchState).To(movementState).Set(() => !_crouch);
+            
+            _movementFsm.StatesCollection.Transitions.From(movementState).To(jumpState)
+                .Set(() =>_jump && IsGrounded());
+            _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(jumpState)
+                .Set(() => _jump && IsGrounded());
+            _movementFsm.StatesCollection.Transitions.From(jumpState).To(movementState)
+                .Set(() => IsGrounded() && jumpState.IsReadyToSwitch());
 
             OnFixedUpdate.Subscribe(_ =>
             {
@@ -135,18 +160,6 @@ namespace Game.Units
 
         public void FixedTick()
         {
-            // var forwardVector = _fightTarget.GetTransformTarget().position - GetTransformTarget().position;
-            // var rightVector = Quaternion.AngleAxis(90, Vector3.up) * forwardVector;
-            // _characterController.Move(forwardVector.normalized * _movementVector.y * _unitData.MovementSpeed);
-            // _characterController.Move(rightVector.normalized * _movementVector.x * _unitData.MovementSpeed);
-            //
-            // _characterController.Move(Physics.gravity);
-            //
-            // forwardVector.y = 0;
-            //
-            // var rootRotation = Quaternion.LookRotation(forwardVector);
-            // _unitView.UpdateRotationData(rootRotation);
-            // _unitView.UpdateAnimationData(_movementVector, _jump, _evade > 0, _moveBoost, _crouch);
             OnFixedUpdate.Execute();
         }
 
@@ -154,6 +167,19 @@ namespace Game.Units
         {
             _fightTarget = target;
             OnTargetUpdate.Execute();
+        }
+
+        public bool IsGrounded()
+        {
+            //character controller layer mask ignoring
+            int layerMask = 1 << 6;
+            layerMask = ~layerMask;
+            RaycastHit hit;
+            if (Physics.Raycast(_characterController.transform.position,
+                    Vector3.down, out hit, _characterController.height / 2f + 0.01f,
+                    layerMask))
+                return true;
+            return false;
         }
 
         public class Factory : PlaceholderFactory<UnitData, CharacterController,UnitController>
