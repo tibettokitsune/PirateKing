@@ -41,6 +41,15 @@ namespace Game.Units
             _animator.SetBool(IsEvade, false);
         }
         
+        public void Crouching(Vector3 movement)
+        {
+            _animator.SetFloat(Vertical, movement.y);
+            _animator.SetFloat(Horizontal, movement.x);
+            _animator.SetBool(MovementBoost, false);
+            _animator.SetBool(IsCrouch, true);
+            _animator.SetBool(IsEvade, false);
+        }
+        
         public void BoosMovement(Vector3 movement)
         {
             _animator.SetFloat(Vertical, movement.y);

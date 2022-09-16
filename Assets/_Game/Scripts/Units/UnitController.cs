@@ -79,11 +79,30 @@ namespace Game.Units
                     boostMovementState.UpdateMovementData(_movementVector);
                 }).AddTo(Disposable);
             #endregion
-        
+            
+            #region AddingCrouchState
+            var crouchState = new CrouchState(_characterController, _unitData);
+                
+            OnTargetUpdate.Subscribe(_ =>
+            {
+                crouchState.UpdateTargets(this, _fightTarget);
+            }).AddTo(Disposable);
+            OnViewUpdate.Subscribe(_ =>
+            {
+                crouchState.UpdateView(_unitView);
+            }).AddTo(Disposable);
+            _movementFsm.StatesCollection.Add(crouchState);
+            OnFixedUpdate.Subscribe(_ =>
+            {
+                crouchState.UpdateMovementData(_movementVector);
+            }).AddTo(Disposable);
+            #endregion
             
             _movementFsm.StatesCollection.Transitions.From(movementState).To(boostMovementState).Set(() => _moveBoost);
             _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(movementState).Set(() => !_moveBoost);
-            
+            _movementFsm.StatesCollection.Transitions.From(movementState).To(crouchState).Set(() => _crouch);
+            _movementFsm.StatesCollection.Transitions.From(crouchState).To(movementState).Set(() => !_crouch);
+
             OnFixedUpdate.Subscribe(_ =>
             {
                 _movementFsm.Update();
