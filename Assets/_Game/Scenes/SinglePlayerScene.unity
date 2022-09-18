@@ -653,7 +653,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 1777436248}
   radius: 2.71
-  verticalOffset: 2.78
+  verticalOffset: 2
 --- !u!1 &1914865734
 GameObject:
   m_ObjectHideFlags: 3

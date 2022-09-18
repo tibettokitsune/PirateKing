@@ -12,7 +12,9 @@ namespace Game.Units.UnitStates
         
         private readonly CharacterController _characterController;
         private readonly UnitData _unitData;
-
+        
+        private const float SpeedMultiplier = 0.5f;
+        private float _defaultSpeed;
         public CrouchState(CharacterController characterController, UnitData unitData)
         {
             _characterController = characterController;
@@ -34,7 +36,8 @@ namespace Game.Units.UnitStates
         
         protected override void OnEnable()
         {
-            
+            _defaultSpeed = _unitData.MovementSpeed;
+            _unitData.MovementSpeed = _defaultSpeed * SpeedMultiplier;
         }
 
         protected override bool OnUpdate()
@@ -56,7 +59,7 @@ namespace Game.Units.UnitStates
 
         protected override void OnDisable()
         {
-            
+            _unitData.MovementSpeed = _defaultSpeed;
         }
     }
 }
