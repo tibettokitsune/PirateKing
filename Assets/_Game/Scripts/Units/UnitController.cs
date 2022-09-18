@@ -19,7 +19,7 @@ namespace Game.Units
         private readonly DiContainer _container;
 
         [SerializeField, ReadOnly] private Vector2 _movementVector;
-        [SerializeField, ReadOnly] private float _evade;
+        [SerializeField, ReadOnly] private bool _evade;
         [SerializeField, ReadOnly] private bool _crouch;
         [SerializeField, ReadOnly] private bool _moveBoost;
         [SerializeField, ReadOnly] private bool _jump;
@@ -54,7 +54,6 @@ namespace Game.Units
 
                 _movementFsm.StatesCollection.SetStartState(movementState);
 
-                // _movementFsm.StatesCollection.Transitions.From(movementState).To(movementState).Set(() => false);
                 OnFixedUpdate.Subscribe(_ =>
                 {
                     movementState.UpdateMovementData(_movementVector);
@@ -81,39 +80,57 @@ namespace Game.Units
             #endregion
             
             #region AddingCrouchState
-            var crouchState = new CrouchState(_characterController, _unitData);
-                
-            OnTargetUpdate.Subscribe(_ =>
-            {
-                crouchState.UpdateTargets(this, _fightTarget);
-            }).AddTo(Disposable);
-            OnViewUpdate.Subscribe(_ =>
-            {
-                crouchState.UpdateView(_unitView);
-            }).AddTo(Disposable);
-            _movementFsm.StatesCollection.Add(crouchState);
-            OnFixedUpdate.Subscribe(_ =>
-            {
-                crouchState.UpdateMovementData(_movementVector);
-            }).AddTo(Disposable);
+                var crouchState = new CrouchState(_characterController, _unitData);
+                    
+                OnTargetUpdate.Subscribe(_ =>
+                {
+                    crouchState.UpdateTargets(this, _fightTarget);
+                }).AddTo(Disposable);
+                OnViewUpdate.Subscribe(_ =>
+                {
+                    crouchState.UpdateView(_unitView);
+                }).AddTo(Disposable);
+                _movementFsm.StatesCollection.Add(crouchState);
+                OnFixedUpdate.Subscribe(_ =>
+                {
+                    crouchState.UpdateMovementData(_movementVector);
+                }).AddTo(Disposable);
             #endregion
             
             #region AddingJumpState
-            var jumpState = new JumpState(_characterController, _unitData);
-                
-            OnTargetUpdate.Subscribe(_ =>
-            {
-                jumpState.UpdateTargets(this, _fightTarget);
-            }).AddTo(Disposable);
-            OnViewUpdate.Subscribe(_ =>
-            {
-                jumpState.UpdateView(_unitView);
-            }).AddTo(Disposable);
-            _movementFsm.StatesCollection.Add(jumpState);
-            OnFixedUpdate.Subscribe(_ =>
-            {
-                jumpState.UpdateMovementData(_movementVector);
-            }).AddTo(Disposable);
+                var jumpState = new JumpState(_characterController, _unitData);
+                    
+                OnTargetUpdate.Subscribe(_ =>
+                {
+                    jumpState.UpdateTargets(this, _fightTarget);
+                }).AddTo(Disposable);
+                OnViewUpdate.Subscribe(_ =>
+                {
+                    jumpState.UpdateView(_unitView);
+                }).AddTo(Disposable);
+                _movementFsm.StatesCollection.Add(jumpState);
+                OnFixedUpdate.Subscribe(_ =>
+                {
+                    jumpState.UpdateMovementData(_movementVector);
+                }).AddTo(Disposable);
+            #endregion
+            
+            #region AddingEvadeState
+                var evadeState = new EvadeState(_characterController, _unitData);
+                    
+                OnTargetUpdate.Subscribe(_ =>
+                {
+                    evadeState.UpdateTargets(this, _fightTarget);
+                }).AddTo(Disposable);
+                OnViewUpdate.Subscribe(_ =>
+                {
+                    evadeState.UpdateView(_unitView);
+                }).AddTo(Disposable);
+                _movementFsm.StatesCollection.Add(evadeState);
+                OnFixedUpdate.Subscribe(_ =>
+                {
+                    evadeState.UpdateMovementData(_movementVector);
+                }).AddTo(Disposable);
             #endregion
             
             _movementFsm.StatesCollection.Transitions.From(movementState).To(boostMovementState).Set(() => _moveBoost);
@@ -128,6 +145,13 @@ namespace Game.Units
             _movementFsm.StatesCollection.Transitions.From(jumpState).To(movementState)
                 .Set(() => IsGrounded() && jumpState.IsReadyToSwitch());
 
+            _movementFsm.StatesCollection.Transitions.From(movementState).To(evadeState).Set(() => _evade);
+            _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(evadeState).Set(() => _evade);
+            _movementFsm.StatesCollection.Transitions.From(crouchState).To(evadeState).Set(() => _evade);
+
+            _movementFsm.StatesCollection.Transitions.From(evadeState).To(movementState).Set(() => !_evade);
+            
+            
             OnFixedUpdate.Subscribe(_ =>
             {
                 _movementFsm.Update();
@@ -152,7 +176,7 @@ namespace Game.Units
         public void UpdateMovementData(Vector3 movement, float isJump, float isEvade, float isMovementBoost, float isCrouch)
         {
             _movementVector = new Vector3(movement.x, movement.y, isJump);
-            _evade = isEvade;
+            _evade = isEvade > 0;
             _crouch = isCrouch > 0;
             _moveBoost = isMovementBoost > 0;
             _jump = isJump > 0;

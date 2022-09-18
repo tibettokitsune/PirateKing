@@ -1,3 +1,5 @@
+using System;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -11,6 +13,7 @@ namespace Game.Units
     public class UnitView : MonoBehaviour
     {
         [Inject] private Animator _animator;
+        
         private static readonly int Vertical = Animator.StringToHash("Vertical");
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
         private static readonly int MovementBoost = Animator.StringToHash("IsMovementBoost");
@@ -63,13 +66,23 @@ namespace Game.Units
             _animator.SetBool(IsLanded, true);
         }
         
-        public void BoosMovement(Vector3 movement)
+        public void BoostMovement(Vector3 movement)
         {
             _animator.SetFloat(Vertical, movement.y);
             _animator.SetFloat(Horizontal, movement.x);
             _animator.SetBool(MovementBoost, true);
             _animator.SetBool(IsCrouch, false);
             _animator.SetBool(IsEvade, false);
+            _animator.SetBool(IsLanded, true);
+        }
+        
+        public void EvadeMovement(Vector3 movement)
+        {
+            _animator.SetFloat(Vertical, movement.y);
+            _animator.SetFloat(Horizontal, movement.x);
+            _animator.SetBool(MovementBoost, false);
+            _animator.SetBool(IsCrouch, false);
+            _animator.SetBool(IsEvade, true);
             _animator.SetBool(IsLanded, true);
         }
     }
