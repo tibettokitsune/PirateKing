@@ -169,7 +169,7 @@ namespace Game.Units
             OnTargetUpdate.Execute();
         }
 
-        public bool IsGrounded()
+        private bool IsGrounded()
         {
             //character controller layer mask ignoring
             int layerMask = 1 << 6;

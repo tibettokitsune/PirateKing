@@ -39,6 +39,10 @@ namespace Game.Infrastructure
         {
             var unitData = new UnitData();
             _enemy = _unitControllerSpawner.SpawnUnit(unitData);
+            var enemyAIController = new EnemyBotController(_enemy);
+            _enemy.UpdateFightTarget(_player);
+            OnLevelUpdate.Subscribe(_ => enemyAIController.Update()).AddTo(enemyAIController.Disposable);
+            OnLevelUpdate.Subscribe(_ => _enemy.FixedTick()).AddTo(enemyAIController.Disposable);
             OnEnemyCreated.Execute(_enemy);
         }
 
@@ -53,8 +57,8 @@ namespace Game.Infrastructure
                 _player.UpdateFightTarget(enemy);
                 _cameraController.SetupPlayerCamera(_player.GetTransformTarget(), _enemy.GetTransformTarget());
             }).AddTo(playerLogicController.Disposable);
-            OnLevelUpdate.Subscribe(_ => _player.FixedTick()).AddTo(playerLogicController.Disposable);
             OnLevelUpdate.Subscribe(_ => playerLogicController.Update()).AddTo(playerLogicController.Disposable);
+            OnLevelUpdate.Subscribe(_ => _player.FixedTick()).AddTo(playerLogicController.Disposable);
         }
         
         public void FixedTick()=> OnLevelUpdate?.Execute();
