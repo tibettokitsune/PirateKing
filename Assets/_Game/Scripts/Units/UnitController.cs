@@ -149,7 +149,7 @@ namespace Game.Units
             _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(evadeState).Set(() => _evade);
             _movementFsm.StatesCollection.Transitions.From(crouchState).To(evadeState).Set(() => _evade);
 
-            _movementFsm.StatesCollection.Transitions.From(evadeState).To(movementState).Set(() => !_evade);
+            _movementFsm.StatesCollection.Transitions.From(evadeState).To(movementState).Set(() => evadeState.IsReadyToSwitch());
             
             
             OnFixedUpdate.Subscribe(_ =>

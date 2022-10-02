@@ -17,6 +17,9 @@ namespace Game.Units.UnitStates
         private float _defaultSpeed;
 
         private Vector2 _onEnableMovement;
+
+        private float _timer;
+        private const float SwitchTime = 0.7f;
         
         public EvadeState(CharacterController characterController, UnitData unitData)
         {
@@ -36,16 +39,21 @@ namespace Game.Units.UnitStates
         {
             _unitView = view;
         }
+
+        public bool IsReadyToSwitch() => _timer >= SwitchTime;
         
         protected override void OnEnable()
         {
             _defaultSpeed = _unitData.MovementSpeed;
             _unitData.MovementSpeed = _defaultSpeed * SpeedMultiplier;
             _onEnableMovement = _movementVector;
+
+            _timer = 0f;
         }
 
         protected override bool OnUpdate()
         {
+            _timer += Time.deltaTime;
             var forwardVector = _targetUnitController.GetTransformTarget().position - _currentUnitController.GetTransformTarget().position;
             var rightVector = Quaternion.AngleAxis(90, Vector3.up) * forwardVector;
             
