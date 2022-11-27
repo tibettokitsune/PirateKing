@@ -1,15 +1,19 @@
 using System;
 using Cinemachine;
+using Game.Infrastructure;
 using UnityEngine;
+using Zenject;
 
 namespace Game.Camera
 {
     [RequireComponent(typeof(CinemachineVirtualCamera))]
     public class FollowCameraController : MonoBehaviour
     {
+        [Inject] private IInput _input;
         [SerializeField] private CinemachineVirtualCamera _camera;
         [SerializeField] private float radius;
         [SerializeField] private float verticalOffset;
+        [SerializeField] private float movementOffset = 1f;
         private CinemachineTransposer _transposer;
         private void OnValidate() 
             => _camera ??= GetComponent<CinemachineVirtualCamera>();
@@ -21,8 +25,10 @@ namespace Game.Camera
 
         private void LateUpdate()
         {
-            if(_camera.Follow)
-                _transposer.m_FollowOffset = FocusDirection() * radius + Vector3.up * verticalOffset;
+            if (_camera.Follow)
+            {
+                _transposer.m_FollowOffset = FocusDirection() * radius + Vector3.up * verticalOffset + Vector3.right * _input.Horizontal() * movementOffset;
+            }
         }
 
         private Vector3 FocusDirection()
