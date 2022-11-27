@@ -8,7 +8,10 @@ namespace Game.Infrastructure
         float Vertical();
         float IsJump();
         float IsEvade();
-        float IsAttack();
+        bool IsAttack();
+
+        float HorizontalAttack();
+        float VerticalAttack();
 
         float IsCrouch();
         float IsMovementBoost();
@@ -24,7 +27,11 @@ namespace Game.Infrastructure
 
         public float IsEvade() => Input.GetAxis("Evade");
 
-        public float IsAttack() => Input.GetAxis("Fire1");
+        public bool IsAttack() => Mathf.Abs(HorizontalAttack()) > 0  && Mathf.Abs(VerticalAttack()) > 0;
+        public float HorizontalAttack() => Input.GetAxis("HorizontalAttack");
+
+        public float VerticalAttack() => Input.GetAxis("VerticalAttack");
+
         public float IsCrouch() => Input.GetAxis("Crouch");
         public float IsMovementBoost() => Input.GetAxis($"MovementBoost");
     }

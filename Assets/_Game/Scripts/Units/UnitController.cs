@@ -7,10 +7,12 @@ using Zenject;
 
 namespace Game.Units
 {
-    public class UnitController : IFixedTickable
+    public class UnitController : IFixedTickable, ITickable
     {
         public CompositeDisposable Disposable { get; } = new CompositeDisposable();
         private ReactiveCommand OnFixedUpdate { get; } = new ReactiveCommand();
+        private ReactiveCommand OnUpdate { get; } = new ReactiveCommand();
+        
         private ReactiveCommand<UnitView> OnViewUpdate { get; } = new ReactiveCommand<UnitView>();
         public ReactiveCommand OnTargetUpdate { get; } = new ReactiveCommand();
         private UnitData _unitData;
@@ -24,15 +26,43 @@ namespace Game.Units
         [SerializeField, ReadOnly] private bool _moveBoost;
         [SerializeField, ReadOnly] private bool _jump;
 
+        [SerializeField, ReadOnly] private bool _isAttack;
+        [SerializeField, ReadOnly] private Vector2 _attackDirection;
+
+
+        
         private UnitController _fightTarget;
 
         private FSM _movementFsm;
+        private FSM _attackFsm;
         private UnitController(DiContainer container,UnitData data, CharacterController controller)
         {
             _container = container;
             _unitData = data;
             _characterController = _container.InstantiatePrefabForComponent<CharacterController>(controller);
             InitializeMovement();
+
+            InitializeAttack();
+        }
+
+        private void InitializeAttack()
+        {
+            _attackFsm = new FSM();
+
+            var idle = new StateSimple("Idle", null, null, null);
+            var attack = new StateSimple("Attack", null, null, null);
+
+            _attackFsm.StatesCollection.Add(idle);
+            _attackFsm.StatesCollection.Add(attack);
+
+            _attackFsm.StatesCollection.SetStartState(idle);
+
+            _attackFsm.StatesCollection.Transitions.From(idle).To(attack).Set(() => _isAttack);
+            _attackFsm.StatesCollection.Transitions.From(attack).To(idle).Set(() => false);
+
+            _attackFsm.Initialize();
+
+            OnUpdate.Subscribe(_ => _attackFsm.Update()).AddTo(Disposable);
         }
 
         private void InitializeMovement()
@@ -181,6 +211,12 @@ namespace Game.Units
             _moveBoost = isMovementBoost > 0;
             _jump = isJump > 0;
         }
+        
+        public void UpdateAttackData(Vector2 direction, bool isAttack)
+        {
+            _attackDirection = direction;
+            _isAttack = isAttack;
+        }
 
         public void FixedTick()
         {
@@ -218,6 +254,11 @@ namespace Game.Units
             {
                 return new UnitController(_container, data, controller);
             }
+        }
+
+        public void Tick()
+        {
+            OnUpdate.Execute();
         }
     }
 }
