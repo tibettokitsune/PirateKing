@@ -9,7 +9,7 @@ namespace Game.Installers
         public override void InstallBindings()
         {
             Container.Bind<Animator>().FromComponentOn(gameObject).AsSingle();
-            Container.Bind<FollowCameraController>().FromComponentInChildren().AsSingle();
+            Container.Bind<FollowCameraController>().FromComponentsInChildren().AsSingle();
         }
     }
 }
