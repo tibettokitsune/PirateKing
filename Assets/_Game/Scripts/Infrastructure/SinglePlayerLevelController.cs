@@ -6,8 +6,9 @@ using Zenject;
 
 namespace Game.Infrastructure
 {
-    public class SinglePlayerLevelController : ILevelController, IFixedTickable
+    public class SinglePlayerLevelController : ILevelController, IFixedTickable, ITickable
     {
+        private ReactiveCommand OnLevelFixesUpdate { get; } = new ReactiveCommand();
         private ReactiveCommand OnLevelUpdate { get; } = new ReactiveCommand();
         private ReactiveCommand<UnitController> OnEnemyCreated { get; } = new ReactiveCommand<UnitController>();
         [Inject] private CameraController _cameraController;
@@ -41,8 +42,8 @@ namespace Game.Infrastructure
             _enemy = _unitControllerSpawner.SpawnUnit(unitData);
             var enemyAIController = new EnemyBotController(_enemy);
             _enemy.UpdateFightTarget(_player);
-            OnLevelUpdate.Subscribe(_ => enemyAIController.Update()).AddTo(enemyAIController.Disposable);
-            OnLevelUpdate.Subscribe(_ => _enemy.FixedTick()).AddTo(enemyAIController.Disposable);
+            OnLevelFixesUpdate.Subscribe(_ => enemyAIController.Update()).AddTo(enemyAIController.Disposable);
+            OnLevelFixesUpdate.Subscribe(_ => _enemy.FixedTick()).AddTo(enemyAIController.Disposable);
             OnEnemyCreated.Execute(_enemy);
         }
 
@@ -57,11 +58,13 @@ namespace Game.Infrastructure
                 _player.UpdateFightTarget(enemy);
                 _cameraController.SetupPlayerCamera(_player.GetTransformTarget(), _enemy.GetTransformTarget());
             }).AddTo(playerLogicController.Disposable);
-            OnLevelUpdate.Subscribe(_ => playerLogicController.Update()).AddTo(playerLogicController.Disposable);
-            OnLevelUpdate.Subscribe(_ => _player.FixedTick()).AddTo(playerLogicController.Disposable);
+            OnLevelFixesUpdate.Subscribe(_ => playerLogicController.Update()).AddTo(playerLogicController.Disposable);
+            OnLevelFixesUpdate.Subscribe(_ => _player.FixedTick()).AddTo(playerLogicController.Disposable);
+            OnLevelUpdate.Subscribe(_ => _player.Tick()).AddTo(playerLogicController.Disposable);
         }
         
-        public void FixedTick()=> OnLevelUpdate?.Execute();
+        public void FixedTick()=> OnLevelFixesUpdate?.Execute();
+        public void Tick() => OnLevelUpdate?.Execute();
     }
 
     public interface ILevelController : IInitializable

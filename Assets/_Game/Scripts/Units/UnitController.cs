@@ -19,7 +19,8 @@ namespace Game.Units
         private UnitView _unitView;
         private readonly CharacterController _characterController;
         private readonly DiContainer _container;
-
+        private AnimatorObserver _animatorObserver;
+        
         [SerializeField, ReadOnly] private Vector2 _movementVector;
         [SerializeField, ReadOnly] private bool _evade;
         [SerializeField, ReadOnly] private bool _crouch;
@@ -50,15 +51,18 @@ namespace Game.Units
             _attackFsm = new FSM();
 
             var idle = new StateSimple("Idle", null, null, null);
-            var attack = new StateSimple("Attack", null, null, null);
+            var attack = new StateSimple("Attack", () =>
+            {
+                _unitView.AttackAnimation(_attackDirection);
+            }, null, null);
 
             _attackFsm.StatesCollection.Add(idle);
             _attackFsm.StatesCollection.Add(attack);
 
             _attackFsm.StatesCollection.SetStartState(idle);
 
-            _attackFsm.StatesCollection.Transitions.From(idle).To(attack).Set(() => _isAttack);
-            _attackFsm.StatesCollection.Transitions.From(attack).To(idle).Set(() => false);
+            _attackFsm.StatesCollection.Transitions.From(idle).To(attack).Set(() => _isAttack && !_animatorObserver.IsAnimationPlay);
+            _attackFsm.StatesCollection.Transitions.From(attack).To(idle).Set(() => !_animatorObserver.IsAnimationPlay);
 
             _attackFsm.Initialize();
 
@@ -198,6 +202,7 @@ namespace Game.Units
         public void CreateView(UnitView view)
         {
             _unitView = _container.InstantiatePrefabForComponent<UnitView>(view, _characterController.transform);
+            _animatorObserver = _unitView._animatorObserver;
             OnViewUpdate.Execute(_unitView);
         }
 

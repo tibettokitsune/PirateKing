@@ -60,7 +60,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
+  - m_ConditionMode: 1
     m_ConditionEvent: Attack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
@@ -228,7 +228,7 @@ AnimatorStateMachine:
     m_Position: {x: 270, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7289145841129119409}
-    m_Position: {x: 270, y: 20, z: 0}
+    m_Position: {x: 260, y: -190, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -506,7 +506,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 33c22566f02f94b63bb9fca3914f93d2,
+    m_Motion: {fileID: -203655887218126122, guid: 3735fdd8e8d664cfca6a36fb31a7e348,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 1, y: 0}
@@ -515,7 +515,7 @@ BlendTree:
     m_DirectBlendParameter: Vertical
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 33c22566f02f94b63bb9fca3914f93d2,
+    m_Motion: {fileID: -203655887218126122, guid: 3735fdd8e8d664cfca6a36fb31a7e348,
       type: 3}
     m_Threshold: 0.33333334
     m_Position: {x: -1, y: 0}
@@ -524,7 +524,7 @@ BlendTree:
     m_DirectBlendParameter: Vertical
     m_Mirror: 1
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: ea090e425c7fe4dcf899d4d73bab6772,
+    m_Motion: {fileID: -203655887218126122, guid: e4d50ab32c15a450cbfdcd90fff10af7,
       type: 3}
     m_Threshold: 0.6666667
     m_Position: {x: 0, y: 1}
@@ -533,7 +533,7 @@ BlendTree:
     m_DirectBlendParameter: Vertical
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 6dc6bdc73babd4b74b80733aa05008b3,
+    m_Motion: {fileID: -203655887218126122, guid: e3a6d354052f14ea6aa5ceab031949dd,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: -1}
@@ -715,7 +715,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
+  - m_ConditionMode: 2
     m_ConditionEvent: Attack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}

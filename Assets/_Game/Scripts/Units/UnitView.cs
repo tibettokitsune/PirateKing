@@ -13,6 +13,7 @@ namespace Game.Units
     public class UnitView : MonoBehaviour
     {
         [Inject] private Animator _animator;
+        [Inject] public readonly AnimatorObserver _animatorObserver;
         
         private static readonly int Vertical = Animator.StringToHash("Vertical");
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
@@ -20,22 +21,28 @@ namespace Game.Units
         private static readonly int IsCrouch = Animator.StringToHash("IsCrouch");
         private static readonly int IsEvade = Animator.StringToHash("IsEvade");
         private static readonly int IsLanded = Animator.StringToHash("IsLanded");
+        private static readonly int Attack = Animator.StringToHash("Attack");
+        private static readonly int VerticalAttack = Animator.StringToHash("VerticalAttack");
+        private static readonly int HorizontalAttack = Animator.StringToHash("HorizontalAttack");
 
         public void UpdateRotationData(Quaternion rootRotation)
         {
             transform.rotation = rootRotation;
         }
 
-        public void UpdateAnimationData(Vector3 movement, bool isLanded, bool isEvade, bool isMovementBoost, 
-            bool isCrouch)
+        public void AttackAnimation(Vector2 direction)
         {
-            _animator.SetFloat(Vertical, movement.y);
-            _animator.SetFloat(Horizontal, movement.x);
-            _animator.SetBool(MovementBoost, isMovementBoost);
-            _animator.SetBool(IsCrouch, isCrouch);
-            _animator.SetBool(IsEvade, isEvade);
+            _animator.SetFloat(HorizontalAttack, direction.x);
+            _animator.SetFloat(VerticalAttack, direction.y);
+            _animator.SetBool(Attack, true);
+            _animator.SetLayerWeight(1, 1f);
+            _animatorObserver.OnAnimationEnd.Take(1).Subscribe(_ =>
+            {
+                _animator.SetLayerWeight(1, 0f);
+                _animator.SetBool(Attack, false);
+            });
         }
-        
+
         public void SimpleMovement(Vector3 movement)
         {
             _animator.SetFloat(Vertical, movement.y);

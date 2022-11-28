@@ -761,6 +761,7 @@ GameObject:
   - component: {fileID: 82739101666836488}
   - component: {fileID: -3940570593979210850}
   - component: {fileID: 2532696522378259584}
+  - component: {fileID: 4291061215132998695}
   m_Layer: 0
   m_Name: TestDummy
   m_TagString: Untagged
@@ -852,6 +853,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f17f671f7830475a99d979f1d85373dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4291061215132998695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378387424162992408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e164576b559a47908e00ed5eaa9c820b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsAnimationPlay: 0
 --- !u!1 &1378406873915315648
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ namespace Game.Infrastructure
 
         public float IsEvade() => Input.GetAxis("Evade");
 
-        public bool IsAttack() => Mathf.Abs(HorizontalAttack()) > 0  && Mathf.Abs(VerticalAttack()) > 0;
+        public bool IsAttack() => Mathf.Abs(HorizontalAttack()) > 0  || Mathf.Abs(VerticalAttack()) > 0;
         public float HorizontalAttack() => Input.GetAxis("HorizontalAttack");
 
         public float VerticalAttack() => Input.GetAxis("VerticalAttack");
