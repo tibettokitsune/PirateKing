@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -13,7 +14,9 @@ namespace Game.Units
     public class UnitView : MonoBehaviour
     {
         [Inject] private Animator _animator;
-        [Inject] public readonly AnimatorObserver _animatorObserver;
+        [Inject] public readonly AnimatorObserver AnimatorObserver;
+        [Inject] private List<DamageSource> _damageSources;
+        [Inject] private List<DamageTarget> _damageTargets;
         
         private static readonly int Vertical = Animator.StringToHash("Vertical");
         private static readonly int Horizontal = Animator.StringToHash("Horizontal");
@@ -36,7 +39,7 @@ namespace Game.Units
             _animator.SetFloat(VerticalAttack, direction.y);
             _animator.SetBool(Attack, true);
             _animator.SetLayerWeight(1, 1f);
-            _animatorObserver.OnAnimationEnd.Take(1).Subscribe(_ =>
+            AnimatorObserver.OnAnimationEnd.Take(1).Subscribe(_ =>
             {
                 _animator.SetLayerWeight(1, 0f);
                 _animator.SetBool(Attack, false);
@@ -92,5 +95,9 @@ namespace Game.Units
             _animator.SetBool(IsEvade, true);
             _animator.SetBool(IsLanded, true);
         }
+
+        public List<DamageSource> GetDamageSources() => _damageSources;
+
+        public List<DamageTarget> GetDamageTargets() => _damageTargets;
     }
 }

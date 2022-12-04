@@ -31,7 +31,7 @@ namespace Game.Units
         [SerializeField, ReadOnly] private Vector2 _attackDirection;
 
 
-        
+        private UnitDamageController _unitDamageController = new UnitDamageController();
         private UnitController _fightTarget;
 
         private FSM _movementFsm;
@@ -54,7 +54,11 @@ namespace Game.Units
             var attack = new StateSimple("Attack", () =>
             {
                 _unitView.AttackAnimation(_attackDirection);
-            }, null, null);
+                _unitDamageController.AttackState(true);
+            }, null, () =>
+            {
+                _unitDamageController.AttackState(false);
+            });
 
             _attackFsm.StatesCollection.Add(idle);
             _attackFsm.StatesCollection.Add(attack);
@@ -202,7 +206,8 @@ namespace Game.Units
         public void CreateView(UnitView view)
         {
             _unitView = _container.InstantiatePrefabForComponent<UnitView>(view, _characterController.transform);
-            _animatorObserver = _unitView._animatorObserver;
+            _animatorObserver = _unitView.AnimatorObserver;
+            _unitDamageController.Setup(_unitView);
             OnViewUpdate.Execute(_unitView);
         }
 
