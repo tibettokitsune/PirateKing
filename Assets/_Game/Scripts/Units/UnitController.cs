@@ -158,7 +158,7 @@ namespace Game.Units
                 }).AddTo(Disposable);
                 OnViewUpdate.Subscribe(_ =>
                 {
-                    evadeState.UpdateView(_unitView);
+                    evadeState.UpdateView(_unitView, _animatorObserver);
                 }).AddTo(Disposable);
                 _movementFsm.StatesCollection.Add(evadeState);
                 OnFixedUpdate.Subscribe(_ =>

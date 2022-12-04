@@ -20,11 +20,13 @@ namespace Game.Units.UnitStates
 
         private float _timer;
         private const float SwitchTime = 0.7f;
+        private AnimatorObserver _animatorObserver;
         
         public EvadeState(CharacterController characterController, UnitData unitData)
         {
             _characterController = characterController;
             _unitData = unitData;
+            
         }
 
         public void UpdateTargets(UnitController unit, UnitController target)
@@ -35,19 +37,20 @@ namespace Game.Units.UnitStates
 
         public void UpdateMovementData(Vector2 movementVector) => _movementVector = movementVector;
 
-        public void UpdateView(UnitView view)
+        public void UpdateView(UnitView view, AnimatorObserver animatorObserver)
         {
             _unitView = view;
+            _animatorObserver = animatorObserver;
         }
 
-        public bool IsReadyToSwitch() => _timer >= SwitchTime;
+        public bool IsReadyToSwitch() => !_animatorObserver.IsAnimationPlay;
         
         protected override void OnEnable()
         {
             _defaultSpeed = _unitData.MovementSpeed;
             _unitData.MovementSpeed = _defaultSpeed * SpeedMultiplier;
             _onEnableMovement = _movementVector;
-
+            _animatorObserver.StartAnimationObserve();
             _timer = 0f;
         }
 
