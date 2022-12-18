@@ -12,6 +12,7 @@ namespace Game.Installers
             Container.Bind<AnimatorObserver>().FromComponentOn(gameObject).AsSingle();
             Container.Bind<DamageSource>().FromComponentsInChildren().AsSingle();
             Container.Bind<DamageTarget>().FromComponentsInChildren().AsSingle();
+            
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Game.Infrastructure
         private void SpawnEnemy()
         {
             var unitData = new UnitData();
-            _enemy = _unitControllerSpawner.SpawnUnit(unitData);
+            _enemy = _unitControllerSpawner.SpawnUnit(unitData, 1);
             var enemyAIController = new EnemyBotController(_enemy);
             _enemy.UpdateFightTarget(_player);
             OnLevelFixesUpdate.Subscribe(_ => enemyAIController.Update()).AddTo(enemyAIController.Disposable);
@@ -50,7 +50,7 @@ namespace Game.Infrastructure
         private void SpawnPlayer()
         {
             var unitData = new UnitData();
-            _player = _unitControllerSpawner.SpawnUnit(unitData);
+            _player = _unitControllerSpawner.SpawnUnit(unitData, 0);
             
             var playerLogicController = new PlayerController(_player, _input);
             OnEnemyCreated.Take(1).Subscribe(enemy =>

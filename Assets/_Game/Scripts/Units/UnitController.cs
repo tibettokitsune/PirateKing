@@ -20,6 +20,8 @@ namespace Game.Units
         private readonly CharacterController _characterController;
         private readonly DiContainer _container;
         private AnimatorObserver _animatorObserver;
+
+        private int _teamID;
         
         [SerializeField, ReadOnly] private Vector2 _movementVector;
         [SerializeField, ReadOnly] private bool _evade;
@@ -28,6 +30,7 @@ namespace Game.Units
         [SerializeField, ReadOnly] private bool _jump;
 
         [SerializeField, ReadOnly] private bool _isAttack;
+        [SerializeField, ReadOnly] private bool _isDamaged;
         [SerializeField, ReadOnly] private Vector2 _attackDirection;
 
 
@@ -55,11 +58,12 @@ namespace Game.Units
             {
                 _unitView.AttackAnimation(_attackDirection);
                 _unitDamageController.AttackState(true);
+                _animatorObserver.IsAnimationPlay = true;
             }, null, () =>
             {
                 _unitDamageController.AttackState(false);
             });
-
+            
             _attackFsm.StatesCollection.Add(idle);
             _attackFsm.StatesCollection.Add(attack);
 
@@ -171,6 +175,23 @@ namespace Game.Units
                 }).AddTo(Disposable);
             #endregion
             
+            #region AddingDamagedState
+
+                var damagedState = new StateSimple("Damaged", () =>
+                {
+                    
+                    _animatorObserver.OnAnimationEnd.Take(1).Subscribe(_ =>
+                    {
+                        _isDamaged = false;
+                    })
+                    .AddTo(_unitDamageController.DamageControllerDisposable);
+                    _unitView.DamageEffect();
+                }, null, null);
+                _movementFsm.StatesCollection.Add(damagedState);
+                
+            #endregion
+
+            
             _movementFsm.StatesCollection.Transitions.From(movementState).To(boostMovementState).Set(() => _moveBoost);
             _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(movementState).Set(() => !_moveBoost);
             _movementFsm.StatesCollection.Transitions.From(movementState).To(crouchState).Set(() => _crouch);
@@ -189,6 +210,12 @@ namespace Game.Units
 
             _movementFsm.StatesCollection.Transitions.From(evadeState).To(movementState).Set(() => evadeState.IsReadyToSwitch());
             
+            _movementFsm.StatesCollection.Transitions.From(movementState).To(damagedState).Set(() => _isDamaged);
+            _movementFsm.StatesCollection.Transitions.From(boostMovementState).To(damagedState).Set(() => _isDamaged);
+            _movementFsm.StatesCollection.Transitions.From(crouchState).To(damagedState).Set(() => _isDamaged);
+
+            _movementFsm.StatesCollection.Transitions.From(damagedState).To(movementState).Set(() => !_isDamaged);
+
             
             OnFixedUpdate.Subscribe(_ =>
             {
@@ -203,11 +230,16 @@ namespace Game.Units
             _characterController.enabled = true;
         }
 
-        public void CreateView(UnitView view)
+        public void CreateView(UnitView view, int teamID)
         {
             _unitView = _container.InstantiatePrefabForComponent<UnitView>(view, _characterController.transform);
             _animatorObserver = _unitView.AnimatorObserver;
-            _unitDamageController.Setup(_unitView);
+            _teamID = teamID;
+            _unitDamageController.Setup(_unitView, _teamID);
+            _unitDamageController.OnDamaged.Subscribe(_ =>
+            {
+                _isDamaged = true;
+            }).AddTo(_unitDamageController.DamageControllerDisposable);
             OnViewUpdate.Execute(_unitView);
         }
 

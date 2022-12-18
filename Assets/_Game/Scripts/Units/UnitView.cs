@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -27,7 +28,9 @@ namespace Game.Units
         private static readonly int Attack = Animator.StringToHash("Attack");
         private static readonly int VerticalAttack = Animator.StringToHash("VerticalAttack");
         private static readonly int HorizontalAttack = Animator.StringToHash("HorizontalAttack");
+        private static readonly int Falling = Animator.StringToHash("Falling");
 
+        private Tween _layersBlendTween;
         public void UpdateRotationData(Quaternion rootRotation)
         {
             transform.rotation = rootRotation;
@@ -99,5 +102,28 @@ namespace Game.Units
         public List<DamageSource> GetDamageSources() => _damageSources;
 
         public List<DamageTarget> GetDamageTargets() => _damageTargets;
+
+        
+        
+        public void DamageEffect()
+        {
+            _layersBlendTween.Kill();
+            _layersBlendTween = DOVirtual.Float(0, 1, 1f, v =>
+            {
+                
+                _animator.SetLayerWeight(2, v);
+            });
+            // _animator.SetLayerWeight(2, 1f);
+            _animator.SetTrigger(Falling);
+            AnimatorObserver.OnAnimationEnd.Take(1).Subscribe(_ =>
+            {
+                _layersBlendTween.Kill();
+                _layersBlendTween = DOVirtual.Float(1, 0, 1f, v =>
+                {
+                    _animator.SetLayerWeight(2, v);
+                });
+                // _animator.SetLayerWeight(2, 0f);
+            });
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Game.Units
 {
     public interface IUnitControllerSpawner
     {
-        UnitController SpawnUnit(UnitData data);
+        UnitController SpawnUnit(UnitData data, int teamID);
     }
     public class UnitControllerSpawner : IUnitControllerSpawner, IInitializable
     {
@@ -21,13 +21,13 @@ namespace Game.Units
             _factory = factory;
         }
 
-        public UnitController SpawnUnit(UnitData data)
+        public UnitController SpawnUnit(UnitData data, int teamID)
         {
             var unit = _factory.Create(data, _config.controllerPrefab);
             var currentSpawnPoint = _spawnPoints[Random.Range( 0, _spawnPoints.Count - 1)];
             _spawnPoints.Remove(currentSpawnPoint);
             unit.ChangeStartPosition(currentSpawnPoint.transform.position);
-            unit.CreateView(_config.unitViews[(int) UnitViewVariant.TestDummy]);
+            unit.CreateView(_config.unitViews[(int) UnitViewVariant.TestDummy], teamID);
             return unit;
         }
 
